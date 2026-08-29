@@ -37,4 +37,16 @@ contract CrowdFund{
     function getContractBlance() public view returns(uint) {
         return address(this).balance;
     }
+
+    //Now lets code the refund logic 
+    function getRefund() public {
+        //first of all we have to perform some basic checks
+        require(block.timestamp > deadline && raisedAmount < target, "The cantract is eligible to refund");
+        //Now check weather the person if even has even done a contri or not 
+        require(contributers[msg.sender] > 0); //sender ka balance more than 0 hona chahiye
+        address payable user = payable(msg.sender);
+        user.transfer(contributers[msg.sender]);
+        contributers[msg.sender] = 0;
+        //Nothing much complex logic it is just one block after another
+    }
 }
