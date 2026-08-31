@@ -10,6 +10,21 @@ contract CrowdFund{
     uint public raisedAmount; //I feel like this is unncessary 
     uint public noOfContributer;
 
+    //Now here coding the what if the crowdfunding was a success....
+    //And ye solidity me harr jagah dekhne ko milti hai .....
+    //Struct -> mapping,..struct -> mapping and so on ...
+
+    struct Request {
+        string description;
+        address payable recipients;
+        uint value;
+        bool completed;
+        uint noOfVoters;
+        mapping (address=> bool) voters;
+    }
+    mapping (uint => Request) public requests;
+    uint public numRequests;
+
     constructor(uint _deadline, uint _target){
         owner = msg.sender;
         minContri = 100 wei;
@@ -48,5 +63,37 @@ contract CrowdFund{
         user.transfer(contributers[msg.sender]);
         contributers[msg.sender] = 0;
         //Nothing much complex logic it is just one block after another
+    }
+
+    modifier onlyOwner(){
+        require(msg.sender == owner);
+        _;
+    }
+
+    function createRequests(string memory _description, address payable _recipient, uint _value) public  onlyOwner {
+        Request storage newRequest = requests[numRequests];
+        numRequests++;
+        newRequest.description= _description;
+        newRequest.recipients= _recipient;
+        newRequest.value= _value;
+        newRequest.completed= false;
+        newRequest.noOfVoters=0;
+    }
+
+    function voteRequest(uint _requestNo) public {
+        require(contributers[msg.sender]>0, "You must be a contributer");
+        Request storage thisRequest = requests[_requestNo];
+        require(thisRequest.voters[msg.sender] == false, "You have already voted");
+        thisRequest.voters[msg.sender] =true;
+        thisRequest.noOfVoters++;
+    }
+
+    function makePayment(uint _reqNum) public onlyOwner{
+        require(raisedAmount>=target);
+        Request storage thisRequest=requests[_reqNum];
+        require(thisRequest.completed == false, "The re is completed");
+        require(thisRequest.noOfVoters > noOfContributer / 2, "Majority doesnot suppolrt this shi");
+        thisRequest.recipients.transfer(thisRequest.value);
+        thisRequest.completed=true;
     }
 }
