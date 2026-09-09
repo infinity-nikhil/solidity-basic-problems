@@ -15,3 +15,4 @@ contract Test {
 }
 
 //And that is it....it works 
+//Here is the catch the problem says only 3 people but it will accept 4 people. You tell me why ?
