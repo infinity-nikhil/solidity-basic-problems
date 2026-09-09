@@ -50,3 +50,35 @@ contract Lottery {
 }
 
 //And we are done
+
+//Later i tried my own version here is what i made it's same just have to think...
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract Test{
+    address payable[] public players;
+    address public owner;
+
+    constructor() {
+        owner = msg.sender;
+    }
+
+    receive() external payable {
+        require(msg.value == 1 ether, "Only 1 ether is allowed"); 
+        require(players.length < 3, "Sorry seats are full");
+        players.push(payable(msg.sender));
+    }
+
+    function getWinner() public returns (address) {
+        require(msg.sender == owner, "Not the owner");
+        require(players.length == 3, "Not enough players");
+        uint i = uint (keccak256(abi.encodePacked(block.timestamp, block.difficulty, players.length)));
+        uint index = i % players.length;
+        address payable winner;
+        winner = players[index];
+        winner.transfer(address(this).balance);
+        return winner;
+        players = new address payable[](0);
+    }
+}
+
