@@ -49,5 +49,7 @@ contract Enums {
     }
 
     //now the val of status is 1 if you try to access it 
+    // Agar thodi insider baat batau to wo internally to index hi rahe ga but we can use as a state if we want 
+    //as shown in the example above 
 
 }
