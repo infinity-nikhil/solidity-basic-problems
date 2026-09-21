@@ -8,3 +8,7 @@ the create logic says: "Just deploy this contract."
 meanwhile the script logic says: "Run this whole deployment procedure."
 
 For real time and deployment and complex requires the script to be used ....but here is the catch with the script deployment it is needed a deploy.s.sol file like an entry point and the proper instruction for the deployment. 
+
+### Minting the token
+Earlier it has now use to mint.
+The details i explained in the code itself
